@@ -1,12 +1,16 @@
 Package: mic.sim
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Simulating and Fitting Models to MIC Data
 Version: 0.2.1
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Alec Michael
+Maintainer: Alec Michael <alec.j.michael@gmail.com>
+Description: mic.sim includes functions for analyzing minimum inhibitory concentration data,
+    including functions for importing or simulating data, viewing the distribution, model
+    fitting, and model visualization. The model fitting uses a latent Gaussian mixture
+    model framework to analyze trends in the mixture weights and component means on the
+    log2 MIC scale to attempt to distinguish and model the wild type and non-wild type
+    subpopulations.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
@@ -31,7 +35,8 @@ Imports:
     tidyselect,
     mgcv,
     MASS,
-    lubridate
+    lubridate,
+    latex2exp
 URL: https://github.com/ajmichaelucd/mic.sim,
     https://ajmichaelucd.github.io/mic.sim/
 BugReports: https://github.com/ajmichaelucd/mic.sim/issues

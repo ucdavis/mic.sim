@@ -111,12 +111,13 @@ mean_plot_add_splits = function(mean, ecoff, s_breakpoint, r_breakpoint, visual_
 
     included = tibble(
       breaks = c("Susceptible Breakpoint", "Resistant Breakpoint", "ECOFF", "Visual Split"),
-      labels = c(TeX(paste0("Susceptible Breakpoint: ", s_breakpoint,r'($\mu$)',"g/mL")), TeX(paste0("Resistant Breakpoint: ", r_breakpoint,r'($\mu$)',"g/mL")), TeX(paste0("ECOFF: ", ecoff,r'($\mu$)',"g/mL")), TeX(paste0("ECOFF: ", visual_split,r'($\mu$)',"g/mL"))),
+      labels = c(TeX(paste0("Susceptible Breakpoint: ", s_breakpoint,r'($\mu$)',"g/mL")), TeX(paste0("Resistant Breakpoint: ", r_breakpoint,r'($\mu$)',"g/mL")), TeX(paste0("ECOFF: ", ecoff,r'($\mu$)',"g/mL")), TeX(paste0("Visual Split: ", visual_split,r'($\mu$)',"g/mL"))),
       values = c("#7CAE00", "#C77CFF", "darkred", "#DF4601"),
       linetypes = c(5,5,2,2),
       entries = c(s_breakpoint, r_breakpoint, ecoff, visual_split)
 
     ) %>% filter(!is.na(entries))
+
     if(!is.na(s_breakpoint)){
       mean = mean + geom_hline(aes(yintercept = s_line, color = "Susceptible Breakpoint", linetype =  "Susceptible Breakpoint"))
     }

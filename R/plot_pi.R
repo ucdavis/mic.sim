@@ -112,10 +112,10 @@ plot_pi = function(output, df, start_date, add_log_reg, ecoff, s_breakpoint, r_b
                c2vs = predict(lr_output_visual_split, newdata = tibble(t = t), type = "response") )
 
       pi = pi +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = c1vs, color = "Below Split", linetype = "Below Split"), data = pi_bounds) +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = c2vs, color = "Above Split", linetype = "Above Split"), data = pi_bounds)
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = c1vs, color = "Below Visual Split", linetype = "Below Visual Split"), data = pi_bounds) +
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = c2vs, color = "Above Visual Split", linetype = "Above Visual Split"), data = pi_bounds)
 
-      breaks_list = breaks_list %>% append(c("Below Split", "Above Split"))
+      breaks_list = breaks_list %>% append(c("Below Visual Split", "Above Visual Split"))
       color_values_list = color_values_list %>% append(c("#DF4601", "#000000"))
       linetypes_list = linetypes_list %>% append(c(2,2))
     }

@@ -1,0 +1,21 @@
+# Workflow derived from https://github.com/d-morrison/gha/blob/main/examples/check-links.yml
+name: Check Links
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+  schedule:
+    # Run weekly on Mondays at 9:00 UTC to catch link rot
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  check:
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: read
+    uses: d-morrison/gha/.github/workflows/check-links.yml@v1

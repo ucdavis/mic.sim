@@ -48,14 +48,14 @@ import_mics_with_metadata(
 Import MICs and Covariates
 }
 \examples{
-import_mics_with_metadata(data = tibble(MIC_A = c("≤0.12", ">16", 4, 2), t = runif(4, 0, 10)),
+import_mics_with_metadata(data = tibble::tibble(MIC_A = c("≤0.12", ">16", 4, 2), t = runif(4, 0, 10)),
                          mic_column = "MIC_A",
                          metadata_columns = "t",
                          log_reg_value = TRUE,
                          scale = "log",
                          round = TRUE)
 
-import_mics_with_metadata(data = tibble(MIC_A = c(0.125, 16, 4, 2), code_A = c("≤", ">", NA, NA), t = runif(4, 0, 10)),
+import_mics_with_metadata(data = tibble::tibble(MIC_A = c(0.125, 16, 4, 2), code_A = c("≤", ">", NA, NA), t = runif(4, 0, 10)),
                          mic_column = "MIC_A",
                          metadata_columns = "t",
                          code_column = "code_A",
@@ -64,7 +64,7 @@ import_mics_with_metadata(data = tibble(MIC_A = c(0.125, 16, 4, 2), code_A = c("
                          round = FALSE,
                          include_mic_bounds = TRUE)
 
-import_mics_with_metadata(data = tibble(MIC_A = c("≤10/1", ">80/8", "40/4", "20/2"), t = runif(4, 0, 10)),
+import_mics_with_metadata(data = tibble::tibble(MIC_A = c("≤10/1", ">80/8", "40/4", "20/2"), t = runif(4, 0, 10)),
                          mic_column = "MIC_A",
                          metadata_columns = "t",
                          combination_agent = 2,

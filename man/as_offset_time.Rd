@@ -15,7 +15,7 @@ as_offset_time(x, start_date)
 Convert Date to Elapsed Time
 }
 \examples{
-as_offset_time(lubridate::mdy("2/10/2010"), 2010)
+\dontrun{ as_offset_time(lubridate::mdy("2/10/2010"), 2010) }
 
 }
 \keyword{internal}

@@ -6,8 +6,8 @@
 #' @param date_col string, what is the name of the column in the data that corresponds to time of sampling
 #' @param date_type string, either "decimal", "date", or "year" use decimal if using t from possible data, date or year if importing mic data and the date column is a date or just a year respectively
 #' @param first_year NULL if date_type is "decimal", otherwise a numeric year or decimal year value if using "year" or "date" for date_type respectively
-#' @param s_breakpoint string, the breakpoint on the MIC scale for what constitutes a susceptible isolate, e.g. \u22648 (\u00b5g/mL, do not incude units)
-#' @param r_breakpoint string, the breakpoint on the MIC scale for what constitutes a resistant isolate, e.g. \u2265128 (\u00b5g/mL, do not incude units)
+#' @param s_breakpoint string, the breakpoint on the MIC scale for what constitutes a susceptible isolate, e.g. <=8 (ug/mL, do not include units)
+#' @param r_breakpoint string, the breakpoint on the MIC scale for what constitutes a resistant isolate, e.g. >=128 (ug/mL, do not include units)
 #' @param ecoff string or numeric, see plot_fm()
 #' @param visual_split string or numeric, see plot_fm()
 #' @param k variable passed into logistic regression GAM

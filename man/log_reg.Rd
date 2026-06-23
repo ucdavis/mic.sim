@@ -32,9 +32,9 @@ log_reg(
 
 \item{first_year}{NULL if date_type is "decimal", otherwise a numeric year or decimal year value if using "year" or "date" for date_type respectively}
 
-\item{s_breakpoint}{string, the breakpoint on the MIC scale for what constitutes a susceptible isolate, e.g. ≤8 (µg/mL, do not incude units)}
+\item{s_breakpoint}{string, the breakpoint on the MIC scale for what constitutes a susceptible isolate, e.g. <=8 (ug/mL, do not include units)}
 
-\item{r_breakpoint}{string, the breakpoint on the MIC scale for what constitutes a resistant isolate, e.g. ≥128 (µg/mL, do not incude units)}
+\item{r_breakpoint}{string, the breakpoint on the MIC scale for what constitutes a resistant isolate, e.g. >=128 (ug/mL, do not include units)}
 
 \item{ecoff}{string or numeric, see plot_fm()}
 

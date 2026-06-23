@@ -12,5 +12,3 @@ test_that("multiplication works", {
   actual = import_mics(mic_column = c(4, ">8", "≤2", "=<2", NA))
   expect_equal(actual, expected)
 })
-
-actual %>% attributes()

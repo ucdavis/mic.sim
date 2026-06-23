@@ -15,6 +15,6 @@ offset_time_as_date(t, start_date)
 Convert Elapsed Time to Date
 }
 \examples{
-offset_time_as_date(2.109589, 2007)
+\dontrun{ offset_time_as_date(2.109589, 2007) }
 }
 \keyword{internal}

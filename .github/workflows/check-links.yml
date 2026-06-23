@@ -1,4 +1,7 @@
-# Workflow derived from https://github.com/d-morrison/gha/blob/main/examples/check-links.yml
+# Inline link-checker rather than using the d-morrison/gha wrapper because the
+# wrapper doesn't expose failIfEmpty — needed here since the package has no
+# links yet. Tracked upstream at d-morrison/gha#91; revert to the wrapper once
+# d-morrison/gha#92 merges and the v1 tag is updated.
 name: Check Links
 
 on:
@@ -13,11 +16,20 @@ on:
   workflow_dispatch:
 
 jobs:
-  check:
+  link-checker:
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       issues: write
       pull-requests: read
-    uses: d-morrison/gha/.github/workflows/check-links.yml@v1
-    with:
-      lychee-config: lychee.toml
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --verbose --no-progress './**/*.md' './**/*.qmd' './**/*.html'
+          failIfEmpty: false
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}

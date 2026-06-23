@@ -1,4 +1,0 @@
-# Lychee link-checker config.
-# fail_if_empty: don't fail when the repo has no linkable files.
-# Remove once d-morrison/gha#91 is resolved and the wrapper exposes this flag.
-fail_if_empty = false

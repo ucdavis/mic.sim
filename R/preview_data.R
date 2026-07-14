@@ -95,7 +95,7 @@ preview_data = function(data, title = "", y_min = NULL, y_max = NULL, ECOFF = NU
                           name = TeX(r'(MIC (Logarithmic Spacing) [$\mu$g/mL])'),
                           breaks = function(limits) seq(floor(limits[1]), ceiling(limits[2]), by = 1)
                         )) +
-    theme_bw() +
+    theme_light() +
     theme(legend.position = "bottom")
 
   plot %>% return()

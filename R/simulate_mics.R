@@ -38,7 +38,7 @@
 #' conc_limits_table = tibble::as_tibble(rbind(c("a", -3, 3),
 #'                                     c("b", -4, 4),
 #'                                     c("c", -4, 4)),`.name_repair` = "unique"
-#' ) |> dplyr::rename("covariate_2" = 1, "low_cons" = 2, "high_cons" = 3)
+#' ) %>% dplyr::rename("covariate_2" = 1, "low_cons" = 2, "high_cons" = 3)
 #'
 #' simulate_mics(
 #' n = 300,

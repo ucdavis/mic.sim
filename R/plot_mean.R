@@ -57,7 +57,7 @@ mean_plot_add_splits = function(mean, ecoff, s_breakpoint, r_breakpoint, visual_
 
     if(!is.na(s_breakpoint)){
       s_line = case_when(
-        grepl("≤",s_breakpoint) ~ s_breakpoint %>% as.character() %>% parse_number() %>% log2,
+        grepl("\u2264",s_breakpoint) ~ s_breakpoint %>% as.character() %>% parse_number() %>% log2,
         grepl("=",s_breakpoint) ~ s_breakpoint %>% as.character() %>% parse_number() %>% log2,
         grepl("<",s_breakpoint) ~ s_breakpoint %>% as.character() %>% parse_number() %>% log2 - 1,
         TRUE ~ s_breakpoint %>% as.character() %>% parse_number() %>% log2
@@ -67,7 +67,7 @@ mean_plot_add_splits = function(mean, ecoff, s_breakpoint, r_breakpoint, visual_
 
     if(!is.na(r_breakpoint)){
       r_line = case_when(
-        grepl("≥",r_breakpoint) ~ r_breakpoint %>% as.character() %>% parse_number() %>% log2 - 1,
+        grepl("\u2265",r_breakpoint) ~ r_breakpoint %>% as.character() %>% parse_number() %>% log2 - 1,
         grepl("=",r_breakpoint) ~ r_breakpoint %>% as.character() %>% parse_number() %>% log2 - 1,
         grepl(">",r_breakpoint) ~ r_breakpoint %>% as.character() %>% parse_number() %>% log2,
         TRUE ~ r_breakpoint %>% as.character() %>% parse_number() %>% log2 - 1
@@ -76,7 +76,7 @@ mean_plot_add_splits = function(mean, ecoff, s_breakpoint, r_breakpoint, visual_
 
     if(!is.na(ecoff)){
       ecoff_line = case_when(
-        grepl("≤", ecoff) ~ ecoff %>% as.character() %>% parse_number() %>% log2,
+        grepl("\u2264", ecoff) ~ ecoff %>% as.character() %>% parse_number() %>% log2,
         grepl("=", ecoff) ~ ecoff %>% as.character() %>% parse_number() %>% log2,
         grepl("<", ecoff) ~ ecoff %>% as.character() %>% parse_number() %>% log2 - 1,
         TRUE ~ ecoff %>% as.character() %>% parse_number() %>% log2
@@ -91,7 +91,7 @@ mean_plot_add_splits = function(mean, ecoff, s_breakpoint, r_breakpoint, visual_
 
     if(!is.na(visual_split)){
       visual_split_line = case_when(
-        grepl("≤", visual_split) ~ visual_split %>% as.character() %>% parse_number() %>% log2,
+        grepl("\u2264", visual_split) ~ visual_split %>% as.character() %>% parse_number() %>% log2,
         grepl("=", visual_split) ~ visual_split %>% as.character() %>% parse_number() %>% log2,
         grepl("<", visual_split) ~ visual_split %>% as.character() %>% parse_number() %>% log2 - 1,
         TRUE ~ visual_split %>% as.character() %>% parse_number() %>% log2

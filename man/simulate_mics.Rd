@@ -65,21 +65,21 @@ covariate_effect_vector = c(2, #intercept for all covariates combined
                                                                 3 #slope for covariate_3
                                                                 )
 #Concentration Limits Table
-conc_limits_table = as_tibble(rbind(c("a", -3, 3),
+conc_limits_table = tibble::as_tibble(rbind(c("a", -3, 3),
                                     c("b", -4, 4),
                                     c("c", -4, 4)),`.name_repair` = "unique"
-) \%>\% rename("covariate_2" = 1, "low_cons" = 2, "high_cons" = 3))
+) |> dplyr::rename("covariate_2" = 1, "low_cons" = 2, "high_cons" = 3)
 
 simulate_mics(
 n = 300,
 t_dist = function(n){runif(n, min = 0, max = 16)},
 pi = function(t) {
   z <- 0.17 + 0.025 * t - 0.00045 * t ^ 2
-  tibble("1" = 1 - z, "2" = z)
+  tibble::tibble("1" = 1 - z, "2" = z)
 },
 `E[X|T,C]` = function(t, c)
 {
-  case_when(c == "1" ~ -4.0 + (0.24 * t) - (0.0055 * t ^ 2),
+  dplyr::case_when(c == "1" ~ -4.0 + (0.24 * t) - (0.0055 * t ^ 2),
             c == "2" ~ 3 + 0.001 * t,
             TRUE ~ NaN)
 },

@@ -6,8 +6,8 @@
 #' @param date_col string, what is the name of the column in the data that corresponds to time of sampling
 #' @param date_type string, either "decimal", "date", or "year" use decimal if using t from possible data, date or year if importing mic data and the date column is a date or just a year respectively
 #' @param first_year NULL if date_type is "decimal", otherwise a numeric year or decimal year value if using "year" or "date" for date_type respectively
-#' @param s_breakpoint string, the breakpoint on the MIC scale for what constitutes a susceptible isolate, e.g. ≤8 (µg/mL, do not incude units)
-#' @param r_breakpoint string, the breakpoint on the MIC scale for what constitutes a resistant isolate, e.g. ≥128 (µg/mL, do not incude units)
+#' @param s_breakpoint string, the breakpoint on the MIC scale for what constitutes a susceptible isolate, e.g. <=8 (ug/mL, do not include units)
+#' @param r_breakpoint string, the breakpoint on the MIC scale for what constitutes a resistant isolate, e.g. >=128 (ug/mL, do not include units)
 #' @param ecoff string or numeric, see plot_fm()
 #' @param visual_split string or numeric, see plot_fm()
 #' @param k variable passed into logistic regression GAM
@@ -33,8 +33,8 @@ log_reg <- function(data, split_by = "ecoff", data_type, drug, date_col, date_ty
 
   if(split_by == "S" | split_by == "s_breakpoint"){
     if(!is.null(s_breakpoint)){
-      divider = case_when(grepl(pattern = "(≤)|(<=)|(=<)", x = s_breakpoint) ~ parse_number(as.character(s_breakpoint)),
-                          grepl(pattern = "(<)", x = s_breakpoint) & !grepl(pattern = "(≤)|(<=)|(=<)", x = s_breakpoint) ~ parse_number(as.character(s_breakpoint)) - 0.00001,
+      divider = case_when(grepl(pattern = "(\u2264)|(<=)|(=<)", x = s_breakpoint) ~ parse_number(as.character(s_breakpoint)),
+                          grepl(pattern = "(<)", x = s_breakpoint) & !grepl(pattern = "(\u2264)|(<=)|(=<)", x = s_breakpoint) ~ parse_number(as.character(s_breakpoint)) - 0.00001,
                           TRUE ~ parse_number(as.character(s_breakpoint))
       )
     }else{
@@ -43,8 +43,8 @@ log_reg <- function(data, split_by = "ecoff", data_type, drug, date_col, date_ty
 
   }else if(split_by == "R" | split_by == "r_breakpoint"){
     if(!is.null(r_breakpoint)){
-      divider = case_when(grepl(pattern = "(≥)|(>=)|(=>)", x = r_breakpoint) ~ parse_number(as.character(r_breakpoint)),
-                          grepl(pattern = "(>)", x = r_breakpoint) & !grepl(pattern = "(≥)|(>=)|(=>)", x = r_breakpoint) ~ parse_number(as.character(r_breakpoint)) + 0.00001,
+      divider = case_when(grepl(pattern = "(\u2265)|(>=)|(=>)", x = r_breakpoint) ~ parse_number(as.character(r_breakpoint)),
+                          grepl(pattern = "(>)", x = r_breakpoint) & !grepl(pattern = "(\u2265)|(>=)|(=>)", x = r_breakpoint) ~ parse_number(as.character(r_breakpoint)) + 0.00001,
                           TRUE ~ parse_number(as.character(r_breakpoint))
       )
     }else{
@@ -54,8 +54,8 @@ log_reg <- function(data, split_by = "ecoff", data_type, drug, date_col, date_ty
   }else if(split_by == "visual_split"){
 
     if(!is.null(visual_split)){
-      divider = case_when(#grepl(pattern = "(≥)|(>=)|(=>)", x = visual_split) ~ parse_number(as.character(visual_split)),
-        grepl(pattern = "(<)", x =visual_split) & !grepl(pattern = "(≤)|(<=)|(=<)", x = visual_split) ~ parse_number(as.character(visual_split)) - 0.00001,
+      divider = case_when(#grepl(pattern = "(\u2265)|(>=)|(=>)", x = visual_split) ~ parse_number(as.character(visual_split)),
+        grepl(pattern = "(<)", x =visual_split) & !grepl(pattern = "(\u2264)|(<=)|(=<)", x = visual_split) ~ parse_number(as.character(visual_split)) - 0.00001,
         TRUE ~ parse_number(as.character(visual_split))
       )
     }else{
@@ -65,8 +65,8 @@ log_reg <- function(data, split_by = "ecoff", data_type, drug, date_col, date_ty
   }else{
 
     if(!is.null(ecoff)){
-      divider = case_when(#grepl(pattern = "(≥)|(>=)|(=>)", x = ecoff) ~ parse_number(as.character(ecoff)),
-        grepl(pattern = "(<)", x =ecoff) & !grepl(pattern = "(≤)|(<=)|(=<)", x = ecoff) ~ parse_number(as.character(ecoff)) - 0.00001,
+      divider = case_when(#grepl(pattern = "(\u2265)|(>=)|(=>)", x = ecoff) ~ parse_number(as.character(ecoff)),
+        grepl(pattern = "(<)", x =ecoff) & !grepl(pattern = "(\u2264)|(<=)|(=<)", x = ecoff) ~ parse_number(as.character(ecoff)) - 0.00001,
         TRUE ~ parse_number(as.character(ecoff))
       )
     }else{

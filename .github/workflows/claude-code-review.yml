@@ -1,0 +1,30 @@
+# Workflow derived from https://github.com/d-morrison/gha/blob/main/examples/claude-code-review.yml
+# NOTE: requires the CLAUDE_CODE_OAUTH_TOKEN repository secret. Pass it
+# explicitly rather than via `secrets: inherit`: cross-owner callers inherit
+# an empty token and the run fails env-validation. The workflow_dispatch path
+# lets claude.yml re-dispatch a review after an @claude run pushes commits.
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review, reopened]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull request number to review'
+        required: true
+        type: string
+
+jobs:
+  review:
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    uses: d-morrison/gha/.github/workflows/claude-code-review.yml@v1
+    secrets:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN }}
+    with:
+      pr-number: ${{ github.event.pull_request.number || inputs.pr_number }}

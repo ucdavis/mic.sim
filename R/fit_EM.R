@@ -41,8 +41,9 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' data = simulate_mics()
-#' fit_EM(model = "pspline",
+#' result = fit_EM(model = "pspline",
 #' approach = "full",
 #' pre_set_degrees = c(4,4),
 #' visible_data = data,
@@ -58,6 +59,7 @@
 #' initial_weighting = 3,
 #' sd_initial = 0.2
 #' )
+#' }
 #'
 #'
 fit_EM = function(model = "pspline", #"polynomial",

@@ -89,8 +89,9 @@ entirely outside the range of tested concentrations by using a reduced approach 
 Mu model fits are done on the log2(MIC) scale. Output is a list containing the data and observation weights, fitted models, and many of the settings used to run the function.
 }
 \examples{
+\donttest{
 data = simulate_mics()
-fit_EM(model = "pspline",
+result = fit_EM(model = "pspline",
 approach = "full",
 pre_set_degrees = c(4,4),
 visible_data = data,
@@ -106,6 +107,5 @@ model_coefficient_tolerance = 0.00001,
 initial_weighting = 3,
 sd_initial = 0.2
 )
-
-
+}
 }

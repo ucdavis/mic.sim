@@ -1,0 +1,42 @@
+# Workflow derived from https://github.com/d-morrison/gha/blob/main/examples/claude.yml
+# NOTE: requires the CLAUDE_CODE_OAUTH_TOKEN repository secret. Pass it
+# explicitly (below) rather than via `secrets: inherit`: GitHub only inherits
+# secrets into a reusable workflow owned by the same org/user, so a cross-owner
+# caller inherits an empty token and the run fails env-validation.
+name: Claude Code
+
+on:
+  workflow_dispatch:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  issues:
+    types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
+
+jobs:
+  claude:
+    if: |
+      (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
+      (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude'))) ||
+      github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+      actions: write
+    uses: d-morrison/gha/.github/workflows/claude.yml@v1
+    secrets:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+      SUBMODULES_TOKEN: ${{ secrets.SUBMODULES_TOKEN }}
+    # with:
+    #   setup-r: true
+    #   prompt-addendum: |
+    #     This is the mic.sim R package. Before committing, run
+    #     lintr::lint_package() and devtools::test(); add a NEWS.md bullet
+    #     for user-facing changes.

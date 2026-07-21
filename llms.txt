@@ -40,8 +40,6 @@ simulate_mics() |>
   : Title
 - [`fit_EM()`](https://ajmichaelucd.github.io/mic.sim/reference/fit_EM.md)
   : Fit Model Using EM Algorithm
-- [`hello()`](https://ajmichaelucd.github.io/mic.sim/reference/hello.md)
-  : Hello, World!
 - [`import_mics_with_metadata()`](https://ajmichaelucd.github.io/mic.sim/reference/import_mics_with_metadata.md)
   : Import MICs and Covariates
 - [`log_reg()`](https://ajmichaelucd.github.io/mic.sim/reference/log_reg.md)

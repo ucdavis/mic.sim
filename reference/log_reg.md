@@ -58,12 +58,12 @@ log_reg(
 - s_breakpoint:
 
   string, the breakpoint on the MIC scale for what constitutes a
-  susceptible isolate, e.g. ≤8 (µg/mL, do not incude units)
+  susceptible isolate, e.g. \<=8 (ug/mL, do not include units)
 
 - r_breakpoint:
 
   string, the breakpoint on the MIC scale for what constitutes a
-  resistant isolate, e.g. ≥128 (µg/mL, do not incude units)
+  resistant isolate, e.g. \>=128 (ug/mL, do not include units)
 
 - ecoff:
 

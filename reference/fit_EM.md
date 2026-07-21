@@ -204,8 +204,9 @@ fit_EM(
 ## Examples
 
 ``` r
+# \donttest{
 data = simulate_mics()
-fit_EM(model = "pspline",
+result = fit_EM(model = "pspline",
 approach = "full",
 pre_set_degrees = c(4,4),
 visible_data = data,
@@ -222,66 +223,5 @@ initial_weighting = 3,
 sd_initial = 0.2
 )
 #> Stopped on combined LL and parameters
-#> $likelihood
-#> # A tibble: 21 × 7
-#>     step loglikelihood survreg_maxout m_step_check_new m_step_check_old
-#>    <dbl>         <dbl>          <dbl>            <dbl>            <dbl>
-#>  1     1         -555.              0            -561.             NaN 
-#>  2     2         -555.              0            -560.            -560.
-#>  3     3         -555.              0            -560.            -560.
-#>  4     4         -555.              0            -560.            -560.
-#>  5     5         -555.              0            -560.            -560.
-#>  6     6         -555.              0            -560.            -560.
-#>  7     7         -555.              0            -560.            -560.
-#>  8     8         -555.              0            -560.            -560.
-#>  9     9         -555.              0            -560.            -560.
-#> 10    10         -555.              0            -560.            -560.
-#> # ℹ 11 more rows
-#> # ℹ 2 more variables: scale_comp_1 <dbl>, scale_comp_2 <dbl>
-#> 
-#> $model
-#> [1] "surv"
-#> 
-#> $possible_data
-#> # A tibble: 600 × 25
-#>    obs_id      t p         comp      x    sd epsilon observed_value low_cons
-#>     <int>  <dbl> <list>    <chr> <dbl> <dbl>   <dbl>          <dbl>    <dbl>
-#>  1      1  1.29  <dbl [2]> 1     -3.70  1     -0.356          -4.06       -3
-#>  2      1  1.29  <dbl [2]> 1     -3.70  1     -0.356          -4.06       -3
-#>  3      2 13.3   <dbl [2]> 1     -1.78  1     -1.06           -2.84       -3
-#>  4      2 13.3   <dbl [2]> 1     -1.78  1     -1.06           -2.84       -3
-#>  5      3  9.61  <dbl [2]> 1     -2.20  1      1.08           -1.12       -3
-#>  6      3  9.61  <dbl [2]> 1     -2.20  1      1.08           -1.12       -3
-#>  7      4  2.52  <dbl [2]> 2      3.00  1.05   1.24            4.24       -3
-#>  8      4  2.52  <dbl [2]> 2      3.00  1.05   1.24            4.24       -3
-#>  9      5  0.118 <dbl [2]> 1     -3.97  1      0.198          -3.77       -3
-#> 10      5  0.118 <dbl [2]> 1     -3.97  1      0.198          -3.77       -3
-#> # ℹ 590 more rows
-#> # ℹ 16 more variables: high_cons <dbl>, tested_concentrations <list>,
-#> #   left_bound <dbl>, right_bound <int>, indicator <dbl>, low_con <dbl>,
-#> #   high_con <dbl>, cens <chr>, c <chr>, `E[Y|t,c]` <dbl>, `sd[Y|t,c]` <dbl>,
-#> #   `P(Y|t,c)` <dbl>, `P(C=c|t)` <dbl[1d]>, `P(c,y|t)` <dbl[1d]>,
-#> #   `P(Y=y|t)` <dbl>, `P(C=c|y,t)` <dbl[1d]>
-#> 
-#> $pi_model
-#> 
-#> Family: binomial 
-#> Link function: logit 
-#> 
-#> Formula:
-#> c == "2" ~ s(t)
-#> 
-#> Estimated degrees of freedom:
-#> 1  total = 2 
-#> 
-#> ML score: 188.1558     
-#> 
-#> $mu_model
-#> $mu_model[[1]]
-#> Call:
-#> survreg(formula = mu_formula, data = ., weights = `P(C=c|y,t)`, 
-#>     dist = "gaussian", control = survreg.control(maxiter = maxiter_survreg))
-#> 
-#> Error in coxph.wtest(var, coef): could not find function "coxph.wtest"
-
+# }
 ```

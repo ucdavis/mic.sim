@@ -40,6 +40,7 @@ model_coefficient_tolerance = 0.00001,
 initial_weighting = 3,
 sd_initial = 0.2
 )
+#> Stopped on combined LL and parameters
 plot_likelihood(likelihood_documentation = output$likelihood)
 
 

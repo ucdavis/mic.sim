@@ -21,6 +21,5 @@ as_offset_time(x, start_date)
 ## Examples
 
 ``` r
-as_offset_time(lubridate::mdy("2/10/2010"), 2010)
-#> Error in as_offset_time(lubridate::mdy("2/10/2010"), 2010): could not find function "as_offset_time"
+if (FALSE)  as_offset_time(lubridate::mdy("2/10/2010"), 2010)  # \dontrun{}
 ```

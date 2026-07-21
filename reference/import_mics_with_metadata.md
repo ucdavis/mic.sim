@@ -90,15 +90,21 @@ import_mics_with_metadata(
 ## Examples
 
 ``` r
-import_mics_with_metadata(data = tibble(MIC_A = c("≤0.12", ">16", 4, 2), t = runif(4, 0, 10)),
+import_mics_with_metadata(data = tibble::tibble(MIC_A = c("≤0.12", ">16", 4, 2), t = runif(4, 0, 10)),
                          mic_column = "MIC_A",
                          metadata_columns = "t",
                          log_reg_value = TRUE,
                          scale = "log",
                          round = TRUE)
-#> Error in tibble(MIC_A = c("≤0.12", ">16", 4, 2), t = runif(4, 0, 10)): could not find function "tibble"
+#> # A tibble: 4 × 8
+#>   obs_id left_bound right_bound mic_column lr_column     t low_con high_con
+#>    <int>      <dbl>       <dbl> <chr>          <dbl> <dbl>   <dbl>    <dbl>
+#> 1      1       -Inf          -3 ≤0.12           0.12  5.93      -3        4
+#> 2      2          4         Inf >16            32     6.87      -3        4
+#> 3      3          1           2 4               4     7.35      -3        4
+#> 4      4          0           1 2               2     4.61      -3        4
 
-import_mics_with_metadata(data = tibble(MIC_A = c(0.125, 16, 4, 2), code_A = c("≤", ">", NA, NA), t = runif(4, 0, 10)),
+import_mics_with_metadata(data = tibble::tibble(MIC_A = c(0.125, 16, 4, 2), code_A = c("≤", ">", NA, NA), t = runif(4, 0, 10)),
                          mic_column = "MIC_A",
                          metadata_columns = "t",
                          code_column = "code_A",
@@ -106,14 +112,28 @@ import_mics_with_metadata(data = tibble(MIC_A = c(0.125, 16, 4, 2), code_A = c("
                          scale = "log",
                          round = FALSE,
                          include_mic_bounds = TRUE)
-#> Error in tibble(MIC_A = c(0.125, 16, 4, 2), code_A = c("≤", ">", NA,     NA), t = runif(4, 0, 10)): could not find function "tibble"
+#> # A tibble: 4 × 10
+#>   obs_id left_bound right_bound mic_column code_column left_bound_mic
+#>    <int>      <dbl>       <dbl> <chr>      <chr>                <dbl>
+#> 1      1       -Inf          -3 0.125      ≤                        0
+#> 2      2          4         Inf 16         >                       16
+#> 3      3          1           2 4          NA                       2
+#> 4      4          0           1 2          NA                       1
+#> # ℹ 4 more variables: right_bound_mic <dbl>, t <dbl>, low_con <dbl>,
+#> #   high_con <dbl>
 
-import_mics_with_metadata(data = tibble(MIC_A = c("≤10/1", ">80/8", "40/4", "20/2"), t = runif(4, 0, 10)),
+import_mics_with_metadata(data = tibble::tibble(MIC_A = c("≤10/1", ">80/8", "40/4", "20/2"), t = runif(4, 0, 10)),
                          mic_column = "MIC_A",
                          metadata_columns = "t",
                          combination_agent = 2,
                          log_reg_value = FALSE,
                          scale = "log",
                          round = FALSE)
-#> Error in tibble(MIC_A = c("≤10/1", ">80/8", "40/4", "20/2"), t = runif(4,     0, 10)): could not find function "tibble"
+#> # A tibble: 4 × 8
+#>   obs_id left_bound right_bound mic_column code_column     t low_con high_con
+#>    <int>      <dbl>       <dbl> <chr>      <chr>       <dbl>   <dbl>    <dbl>
+#> 1      1       -Inf           0 1          <=          3.06        0        3
+#> 2      2          3         Inf 8          >           7.32        0        3
+#> 3      3          1           2 4          NA          1.34        0        3
+#> 4      4          0           1 2          NA          0.998       0        3
 ```

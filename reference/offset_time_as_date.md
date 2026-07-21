@@ -21,6 +21,5 @@ offset_time_as_date(t, start_date)
 ## Examples
 
 ``` r
-offset_time_as_date(2.109589, 2007)
-#> Error in offset_time_as_date(2.109589, 2007): could not find function "offset_time_as_date"
+if (FALSE)  offset_time_as_date(2.109589, 2007)  # \dontrun{}
 ```

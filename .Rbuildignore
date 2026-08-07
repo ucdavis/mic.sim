@@ -10,3 +10,5 @@
 ^\.github$
 ^vignettes/articles$
 ^data-raw$
+^\.claude$
+^CLAUDE\.md$

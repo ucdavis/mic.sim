@@ -18,7 +18,7 @@ devtools::document()      # regenerate man/ and NAMESPACE from roxygen (required
 devtools::test()          # run the test suite
 devtools::check()         # full R CMD check, as CI runs it
 devtools::install()
-pkgdown::build_site()     # site is published to https://ajmichaelucd.github.io/mic.sim/
+pkgdown::build_site()     # site is served from https://ucdavis.github.io/mic.sim/
 ```
 
 Run a single test file:
@@ -99,7 +99,8 @@ component. `ncomp` still counts the fixed component.
 ### Cross-validation
 
 When `pre_set_degrees` is `NULL`: `full_cv()` -> `single_cv_all()` ->
-`get_fold_likelihood_all()` -> `calculate_fold_likelihood_all()`. Degree combinations
+`get_fold_likelihood_all_safe()` (a `purrr::possibly()` wrapper returning `NaN`) ->
+`calculate_fold_likelihood_all()`. Degree combinations
 come from `create_degree_combinations_all()` (`degree_sets` is `"matched"` or
 `"independent"`), and the winner is the set with the highest summed held-out
 log-likelihood. Folds that fail are retried up to `reruns_allowed`.
@@ -125,9 +126,11 @@ why the previous iteration is retained in the output at all.
   with only `mic.sim` attached, so qualify calls into Imports packages
   (`tibble::tibble()`, `dplyr::rename()`). Wrap examples for non-exported functions in
   `\dontrun{}`, and slow or printing-fragile fits (`fit_EM`) in `\donttest{}`.
-- **`≤` (U+2264) in MIC strings is data syntax, not a typo.** `import_mics()` parses
-  `≤`, `<=`, `=<`, and `>`. The `check-non-standard-chars` CI job only bans curly quotes
-  and en/em dashes, so leave `≤` alone.
+- **`≤` (U+2264) in MIC strings is data syntax, not a typo.** `import_mics()` accepts
+  `≤`, `<=`, `=<`, and `>`. Note the split: `R/import_mics.R` writes the escape
+  (`"(\u2264)|(<=)|(=<)"`) to keep the R code ASCII, while roxygen docs and test
+  fixtures use the literal character. Keep that split, and leave the literals alone --
+  the `check-non-standard-chars` CI job only bans curly quotes and en/em dashes.
 - **magrittr pipes** (`%>%`, `%<>%`) throughout, not the native pipe; the `.Rproj` sets
   `UseNativePipeOperator: No`.
 - **`misc/` and `data-raw/` are tracked scratch work**, both `.Rbuildignore`d. They hold

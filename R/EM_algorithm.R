@@ -636,8 +636,8 @@ m_step_check_maximizing = function(possible_data, mu_models, pi_model){
           pnorm(right_bound, mean = `E[Y|t,c]`, sd =  `sd[Y|t,c]`, lower.tail = FALSE)
       ),
       `P(C=c|t)` = case_when(
-        c == "2" ~ predict(pi_model, newdata = tibble(t = t), type = "response"),
-        c == "1" ~ 1 - predict(pi_model, newdata = tibble(t = t), type = "response")
+        c == "2" ~ predict(pi_model, newdata = possible_data, type = "response"),
+        c == "1" ~ 1 - predict(pi_model, newdata = possible_data, type = "response")
       ),
       `P(c,y|t)` = `P(C=c|t)` * `P(Y|t,c)`
     ) %>% select(obs_id, c, `P(c,y|t)`, `P(C=c|y,t)`) %>%

@@ -528,8 +528,8 @@ calculate_density_obs =  function(possible_data, mu_models){
 pi_model_predictions = function(possible_data, pi_model_new){
   possible_data %>% mutate(
     `P(C=c|t)` = case_when(
-      c == "2" ~ predict(pi_model_new, newdata = tibble(t = t), type = "response"),
-      c == "1" ~ 1 - predict(pi_model_new, newdata = tibble(t = t), type = "response")
+      c == "2" ~ predict(pi_model_new, newdata = possible_data, type = "response"),
+      c == "1" ~ 1 - predict(pi_model_new, newdata = possible_data, type = "response")
     )
   ) %>% return()
 }

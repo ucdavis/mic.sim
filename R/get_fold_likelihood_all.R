@@ -149,7 +149,7 @@ get_fold_likelihood_all_safe_single_output =
            verbose = 3,
            model_coefficient_tolerance = 0.00001,
            maxiter_survreg = 30,
-           initial_weighting = 9,
+           initial_weighting = 1,
            sd_initial = 0.2,
            scale = NULL){
 

@@ -56,7 +56,7 @@ plot_fm <- function(output, title ="", add_log_reg = FALSE, ecoff = NA, s_breakp
 
   if(!is.null(output$fixed_side)){
     if(output$fixed_side == "LC"){
-      check = check_comp_conv(output$mu_model[[1]])
+      check = check_comp_conv(output$mu_model[[1]]) #TRUE means the component mu model did not converge
       dnc = c(TRUE, check)
       n_fitted_components = 1 - check
       results = tibble(c = 1:2, dnc)
@@ -122,9 +122,9 @@ plot_fm <- function(output, title ="", add_log_reg = FALSE, ecoff = NA, s_breakp
 
     pi = pi + theme_light()
 
-    return(patchwork::wrap_plots(mean,pi, ncol = 1))
+    return(patchwork::wrap_plots(mean,pi, ncol = 1) %>% suppressMessages())
   }else{
-    return(patchwork::wrap_plots(mean, ncol = 1))
+    return(patchwork::wrap_plots(mean, ncol = 1) %>% suppressMessages())
   }
 
 }
@@ -196,18 +196,87 @@ check_comp_conv = function(models){
   }else{is.na(models$scale) | (tibble(a = models$coefficients) %>% filter(is.na(a)) %>% nrow) > 0}
 }
 
-get_two_comp_ci = function(output){
-  tibble(t = rep(seq(0, max(output$possible_data$t), len = 300), 2)) %>%
-    mutate(
-      c1pred = predict(output$mu_model[[1]], tibble(t), se = T)$fit,
-      c1pred_se = predict(output$mu_model[[1]], tibble(t), se = T)$se.fit,
-      c1pred_lb = c1pred - 1.96 * c1pred_se,
-      c1pred_ub = c1pred + 1.96 * c1pred_se,
-      c2pred = predict(output$mu_model[[2]], tibble(t), se = T)$fit,
-      c2pred_se = predict(output$mu_model[[2]], tibble(t), se = T)$se.fit,
-      c2pred_lb = c2pred - 1.96 * c2pred_se,
-      c2pred_ub = c2pred + 1.96 * c2pred_se,
-    ) %>% return()}
+get_two_comp_ci = function(output, covariate = NULL, other_covariates_list = NULL){
+  if(is.null(output$mu_model[[1]]$xlevels)){
+    tibble(t = seq(0, max(output$possible_data$t), len = 300)) %>%
+      mutate(
+        c1pred = predict(output$mu_model[[1]], ., se = T)$fit,
+        c1pred_se = predict(output$mu_model[[1]], ., se = T)$se.fit,
+        c1pred_lb = c1pred - 1.96 * c1pred_se,
+        c1pred_ub = c1pred + 1.96 * c1pred_se,
+        c2pred = predict(output$mu_model[[2]], ., se = T)$fit,
+        c2pred_se = predict(output$mu_model[[2]], ., se = T)$se.fit,
+        c2pred_lb = c2pred - 1.96 * c2pred_se,
+        c2pred_ub = c2pred + 1.96 * c2pred_se,
+      ) %>% return()
+  }else{
+    cov_names = output$mu_model[[1]]$xlevels %>% names()
+    if(length(cov_names) == 1){
+      expand_grid( tibble(t = seq(0, max(output$possible_data$t), len = 300)), do.call(expand_grid, output$mu_model[[1]]$xlevels)) %>%
+        mutate(
+          c1pred = predict(output$mu_model[[1]], ., se = T)$fit,
+          c1pred_se = predict(output$mu_model[[1]], ., se = T)$se.fit,
+          c1pred_lb = c1pred - 1.96 * c1pred_se,
+          c1pred_ub = c1pred + 1.96 * c1pred_se,
+          c2pred = predict(output$mu_model[[2]], ., se = T)$fit,
+          c2pred_se = predict(output$mu_model[[2]], ., se = T)$se.fit,
+          c2pred_lb = c2pred - 1.96 * c2pred_se,
+          c2pred_ub = c2pred + 1.96 * c2pred_se,
+        ) %>% return()
+    }else{
+      if((is.null(covariate) | is.null(other_covariates_list))){
+        errorCondition("please use the covariate input to select a covariate to display using linetype, other variables must have a single value specified using other_covariates_list input")
+      }else{
+        #use covariate to pick which one gets kept, use other_covariates_list to limit which values we use to make table
+          #first verify that all names in other_covariates_list are in xlevels
+      if(!all((other_covariates_list %>% names()) %in% cov_names) ){
+        errorCondition("One of the names in other_covariates_list does not match the covariates in the mu models")
+      }
+
+          #verify all the covariates in the mu models except the one allowed to vary are in the other covariates list
+      if(!all((cov_names %>% discard(~.x == covariate)) %in% (other_covariates_list %>% names())) ){
+        errorCondition("One of the names in other_covariates_list does not match the covariates in the mu models")
+      }
+
+        #verify all entries in other_covariates_list are in xlevels
+      if(!(purrr::imap_lgl(other_covariates_list, ~ .x %in% output$mu_model[[1]]$xlevels) %>% all())){
+       errorCondition("Value in other_covariates_list is not in mu model covariates")
+      }
+
+        #verify other_covariates_list consists of one value per list element
+
+      if(!(imap_lgl(other_covariates_list, ~ length(.x) == 1) %>% all())){
+        errorCondition("elements in other_covariates_list should all be of length 1")
+      }
+
+#Now actually make the data set
+
+
+        expand_grid( tibble(t = seq(0, max(output$possible_data$t), len = 300)), do.call(expand_grid, output$mu_model[[1]]$xlevels)) %>%
+          mutate(
+            other_covariates_list %>% as_tibble(),
+            c1pred = predict(output$mu_model[[1]], ., se = T)$fit,
+            c1pred_se = predict(output$mu_model[[1]], ., se = T)$se.fit,
+            c1pred_lb = c1pred - 1.96 * c1pred_se,
+            c1pred_ub = c1pred + 1.96 * c1pred_se,
+            c2pred = predict(output$mu_model[[2]], ., se = T)$fit,
+            c2pred_se = predict(output$mu_model[[2]], ., se = T)$se.fit,
+            c2pred_lb = c2pred - 1.96 * c2pred_se,
+            c2pred_ub = c2pred + 1.96 * c2pred_se,
+          ) %>% return()
+
+
+      }
+    }
+
+
+
+
+
+  }
+
+
+  }
 
 offset_time_as_date_in_df = function(df, start_date){
   df %>% mutate(t = offset_time_as_date(t, start_date)) %>% return()

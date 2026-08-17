@@ -6,6 +6,8 @@
 #' @param start_date
 #' @param fitted_comp
 #' @param title
+#' @param covariate string, column name of the covariate to be used for the linetype variable
+#' @param other_covariates_list
 #' @param plot_min
 #' @param plot_max
 #' @param ecoff
@@ -22,7 +24,7 @@
 #' @export
 #'
 #' @examples
-plot_mean = function(output, df, results, start_date, fitted_comp, title, plot_min, plot_max, ecoff, s_breakpoint, r_breakpoint, visual_split, x_axis_t_breaks, assumed_components, n_fitted_components){
+plot_mean = function(output, df, results, start_date, fitted_comp, title, covariate, other_covariates_list, plot_min, plot_max, ecoff, s_breakpoint, r_breakpoint, visual_split, x_axis_t_breaks, assumed_components, n_fitted_components){
   if(n_fitted_components == 2){
     mean = make_2C_mean_plot(output = output, df = df, start_date = start_date, title = title, plot_min = plot_min, plot_max = plot_max)
     mean = mean_plot_add_splits(mean = mean, ecoff = ecoff, s_breakpoint = s_breakpoint, r_breakpoint = r_breakpoint, visual_split = visual_split)
@@ -256,8 +258,14 @@ set_up_reduced_mean_plot = function(output, results, df, start_date, fitted_comp
 }
 
 make_2C_mean_plot = function(output, df, start_date, title, plot_min, plot_max){
-  ci_data = get_two_comp_ci(output)
+  ci_data = get_two_comp_ci(output = output, covariate = covariate, other_covariates_list = other_covariates_list)
 
+
+
+    #geom_bar(aes(x = mid, fill = cens)) +
+    #geom_function(fun = function(t){predict(output$mu_model[[1]], newdata = data.frame(t = as_offset_time(x = t, start_date)))}, aes(color = "Component 1 Mu", linetype = "Fitted Model")) +
+    #geom_function(fun = function(t){predict(output$mu_model[[2]], newdata = data.frame(t = as_offset_time(x = t, start_date)))}, aes(color = "Component 2 Mu", linetype = "Fitted Model")) +
+if(is.null(output$mu_model[[1]]$xlevels)){
   mean <- df %>%
     offset_time_as_date_in_df(., start_date) %>%
     ggplot(aes(x = t)) +
@@ -269,20 +277,49 @@ make_2C_mean_plot = function(output, df, start_date, title, plot_min, plot_max){
     geom_point(aes(x = t, y = left_bound,  color = `P(C=c|y,t)`), data = df %>% filter(left_bound != -Inf & c == "2") %>% offset_time_as_date_in_df(., start_date), alpha = 0.3) +
     geom_point(aes(x = t, y = right_bound,  color = `P(C=c|y,t)`), data = df %>% filter(right_bound != Inf & c == "2") %>% offset_time_as_date_in_df(., start_date), alpha = 0.3) +
     ggnewscale::new_scale_color() +
-
-    #geom_bar(aes(x = mid, fill = cens)) +
-    #geom_function(fun = function(t){predict(output$mu_model[[1]], newdata = data.frame(t = as_offset_time(x = t, start_date)))}, aes(color = "Component 1 Mu", linetype = "Fitted Model")) +
-    #geom_function(fun = function(t){predict(output$mu_model[[2]], newdata = data.frame(t = as_offset_time(x = t, start_date)))}, aes(color = "Component 2 Mu", linetype = "Fitted Model")) +
     geom_line(aes(x = offset_time_as_date(t, start_date), y = c1pred, color = "Component 1 Mu"), data = ci_data) +
     geom_line(aes(x = offset_time_as_date(t, start_date), y = c2pred, color = "Component 2 Mu"), data = ci_data) +
     geom_ribbon(aes(ymin = c1pred_lb, ymax = c1pred_ub, x = offset_time_as_date(t, start_date), fill = "Component 1 Mu"), data = ci_data, alpha = 0.25) +
     geom_ribbon(aes(ymin = c2pred_lb, ymax = c2pred_ub, x = offset_time_as_date(t, start_date), fill = "Component 2 Mu"), data = ci_data, alpha = 0.25)
+
   if(attr(df, "model") != "mgcv"){
     mean = mean +
       geom_ribbon(aes(ymin = lwr, ymax = upr, x = t, fill = "Component 1 Mu"), data = sim_pi_survreg_boot(df, fit = output$mu_model[[1]], alpha = 0.05, nSims = 10000) %>% offset_time_as_date_in_df(., start_date), alpha = 0.15) +
       geom_ribbon(aes(ymin = lwr, ymax = upr, x = t, fill = "Component 2 Mu"), data = sim_pi_survreg_boot(df, fit = output$mu_model[[2]], alpha = 0.05, nSims = 10000) %>% offset_time_as_date_in_df(., start_date), alpha = 0.15) +
       scale_fill_manual(breaks = c("Component 1 Mu", "Component 2 Mu"), values = c("#e4190b", "#00999d"), labels = c(TeX(r'(Component 1 Mean: $\hat{\mu}_{1,t}$)'), TeX(r'(Component 2 Mean: $\hat{\mu}_{2,t}$)')), name = "Component Means")
   }
+
+  }else{
+
+    df %>%
+      offset_time_as_date_in_df(., start_date) %>%
+      ggplot(aes(x = t)) +
+      scale_fill_gradient2(high = "#00BFC4", low = "#F8766D", mid = "green", midpoint = 0.5, name = "P(C=2|y,t)") +
+      scale_color_gradient2(high = "#00BFC4", low = "#F8766D", mid = "green", midpoint = 0.5, name = "P(C=2|y,t)") +
+      #geom_point(aes(x = t, y = mid, color = `P(C=c|y,t)`), data = df %>% filter(c == "2"), alpha = 0) +
+      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound, color = `P(C=c|y,t)`), data = (df %>% filter(cens == "int" & c == "2") %>% offset_time_as_date_in_df(., start_date)), alpha = 0.3) +
+      geom_segment(aes(x = t, xend = t, y = right_bound, yend = left_bound, color = `P(C=c|y,t)`), data = (df %>% filter(cens == "lc" & c == "2") %>% mutate(plot_min) %>% offset_time_as_date_in_df(., start_date)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.3) +
+      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound, color = `P(C=c|y,t)`), data = (df %>% filter(cens == "rc" & c == "2") %>% mutate(plot_max) %>% offset_time_as_date_in_df(., start_date)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.3) +
+      ggnewscale::new_scale_color() +
+      geom_point(aes(x = t, y = left_bound,  fill = `P(C=c|y,t)`, color = .data[[covariate]]), shape = 21, size = 2, data = df %>% filter(left_bound != -Inf & c == "2") %>% offset_time_as_date_in_df(., start_date), alpha = 0.3) +
+      geom_point(aes(x = t, y = right_bound,  fill = `P(C=c|y,t)`, color = .data[[covariate]]), shape = 21, size = 2, data = df %>% filter(right_bound != Inf & c == "2") %>% offset_time_as_date_in_df(., start_date), alpha = 0.3) +
+      scale_color_manual( breaks = df[covariate] %>% pull() %>% unique() %>% str_sort, values = c("black", "yellow")) +
+      ggnewscale::new_scale_color() +
+      ggnewscale::new_scale_fill() +
+      geom_line(aes(x = offset_time_as_date(t, start_date), y = c1pred, color = "Component 1 Mu", linetype = .data[[covariate]]), data = ci_data) +
+      geom_line(aes(x = offset_time_as_date(t, start_date), y = c2pred, color = "Component 2 Mu", linetype = .data[[covariate]]), data = ci_data) +
+      geom_ribbon(aes(ymin = c1pred_lb, ymax = c1pred_ub, x = offset_time_as_date(t, start_date), fill = "Component 1 Mu"), data = ci_data, alpha = 0.25) +
+      geom_ribbon(aes(ymin = c2pred_lb, ymax = c2pred_ub, x = offset_time_as_date(t, start_date), fill = "Component 2 Mu"), data = ci_data, alpha = 0.25) +
+      theme_light() +
+      scale_color_manual(breaks = c("Component 1 Mu", "Component 2 Mu"), values = c("#e4190b", "#00999d"), labels = c(TeX(r'(Component 1 Mean: $\hat{\mu}_{1,t}$)'), TeX(r'(Component 2 Mean: $\hat{\mu}_{2,t}$)')),name = "Component Means") +
+      scale_fill_manual(breaks = c("Component 1 Mu", "Component 2 Mu"), values = c("#e4190b", "#00999d"), labels = c(TeX(r'(Component 1 Mean: $\hat{\mu}_{1,t}$)'), TeX(r'(Component 2 Mean: $\hat{\mu}_{2,t}$)')),name = "Component Means")
+
+
+
+
+}
+
+
   mean = mean + scale_color_manual(breaks = c("Component 1 Mu", "Component 2 Mu"), values = c("#e4190b", "#00999d"), labels = c(TeX(r'(Component 1 Mean: $\hat{\mu}_{1,t}$)'), TeX(r'(Component 2 Mean: $\hat{\mu}_{2,t}$)')),name = "Component Means") +
     ggtitle(title) +
     xlab("Time") +

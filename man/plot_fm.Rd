@@ -17,7 +17,8 @@ plot_fm(
   plot_range = NULL,
   start_date = 0,
   x_axis_t_breaks = NULL,
-  skip = NULL
+  skip = NULL,
+  expand.grid.axis.lines = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ plot_fm(
 \item{x_axis_t_breaks}{Numerical vector, vector of values on the scale of t, the time variable in years from the start of the study. Helpful to use seq(0,t_max, by = spacing) where t_max is the length of study period and spacing is how many years to separate major ticks by}
 
 \item{skip}{Vector, vector of either "ecoff", "bkpts", or c("ecoff", "bkpts"), to describe any splits for which logistic regression should not be plotted if another logistic regression is being plotted. If only one divider is used, just turn off add_log_reg}
+
+\item{expand.grid.axis.lines}{logical, if TRUE increases linewidth of axes and gridlines to 0.75}
 }
 \description{
 Takes output of a fit_EM() run and plots it.

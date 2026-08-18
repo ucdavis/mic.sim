@@ -12,7 +12,8 @@ preview_data(
   ECOFF = NULL,
   ECOFF_scale = "MIC",
   covariate = NULL,
-  covariate_title = "Legend"
+  covariate_title = "Legend",
+  expand.grid.axis.lines = FALSE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ preview_data(
 \item{covariate}{string, name of a column in data}
 
 \item{covariate_title}{what to name the legend for the covariate}
+
+\item{expand.grid.axis.lines}{logical, if TRUE increases linewidth of axes and gridlines to 0.75}
 }
 \description{
 Produces a basic plot of data generated from simulate_mics or import_mics_with_metadata

@@ -16,6 +16,7 @@
 #' @param start_date Integer, value at which x axis should start (year).
 #' @param  x_axis_t_breaks Numerical vector, vector of values on the scale of t, the time variable in years from the start of the study. Helpful to use seq(0,t_max, by = spacing) where t_max is the length of study period and spacing is how many years to separate major ticks by
 #' @param skip Vector, vector of either "ecoff", "bkpts", or c("ecoff", "bkpts"), to describe any splits for which logistic regression should not be plotted if another logistic regression is being plotted. If only one divider is used, just turn off add_log_reg
+#' @param expand.grid.axis.lines logical, if TRUE increases linewidth of axes and gridlines to 0.75
 #'
 #' @import ggplot2
 #' @import ggnewscale
@@ -46,7 +47,7 @@
 #' plot_fm(output = output, title = "Example", add_log_reg = TRUE, s_breakpoint = "<=1", r_breakpoint = ">=4")
 #'
 #'
-plot_fm <- function(output, title ="", add_log_reg = FALSE, ecoff = NA, s_breakpoint = NA, r_breakpoint = NA, visual_split = NA, use_prior_step = FALSE, range_zoom = FALSE, plot_range = NULL, start_date = 0, x_axis_t_breaks = NULL, skip = NULL){
+plot_fm <- function(output, title ="", add_log_reg = FALSE, ecoff = NA, s_breakpoint = NA, r_breakpoint = NA, visual_split = NA, use_prior_step = FALSE, range_zoom = FALSE, plot_range = NULL, start_date = 0, x_axis_t_breaks = NULL, skip = NULL, expand.grid.axis.lines = FALSE){
   #assumed_components is how many components were intended to be in the distribution, even if not estimated (e.g. for a reduced model where the NWT component is unestimated, assumed_components would still be 2)
   assumed_components = output$ncomp
 
@@ -117,10 +118,32 @@ plot_fm <- function(output, title ="", add_log_reg = FALSE, ecoff = NA, s_breakp
 
   mean = mean + theme_light()
 
+  if(expand.grid.axis.lines){
+    mean = mean +
+    theme(
+      panel.border = element_rect(linewidth = 0.75),
+      panel.grid.major = element_line(linewidth = 0.75),
+      panel.grid.minor = element_line(linewidth = 0.75),
+      axis.ticks = element_line(linewidth = 0.75),
+      axis.line = element_blank()
+      )
+}
+
   if(assumed_components > 1){
     pi = plot_pi(output = output, df = df, start_date = start_date, add_log_reg = add_log_reg, ecoff = ecoff, s_breakpoint = s_breakpoint, r_breakpoint = r_breakpoint, visual_split = visual_split, skip = skip, x_axis_t_breaks = x_axis_t_breaks)
 
-    pi = pi + theme_light()
+    pi = pi  + theme_light()
+
+    if(expand.grid.axis.lines){
+      pi = pi +
+        theme(
+          panel.border = element_rect(linewidth = 0.75),
+          panel.grid.major = element_line(linewidth = 0.75),
+          panel.grid.minor = element_line(linewidth = 0.75),
+          axis.ticks = element_line(linewidth = 0.75),
+          axis.line = element_blank()
+        )
+    }
 
     return(patchwork::wrap_plots(mean,pi, ncol = 1))
   }else{

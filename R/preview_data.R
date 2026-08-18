@@ -10,6 +10,7 @@
 #' @param ECOFF_scale defaults to "MIC", meaning the ECOFF provided will be in concentration directly, if you have already taken log2(ECOFF) then change this to "log"
 #' @param covariate string, name of a column in data
 #' @param covariate_title what to name the legend for the covariate
+#' @param expand.grid.axis.lines logical, if TRUE increases linewidth of axes and gridlines to 0.75
 #'
 #' @importFrom ggnewscale new_scale_color
 #'
@@ -17,7 +18,7 @@
 #' @export
 #'
 #' @examples
-preview_data = function(data, title = "", y_min = NULL, y_max = NULL, ECOFF = NULL, ECOFF_scale = "MIC", covariate = NULL, covariate_title = "Legend"){
+preview_data = function(data, title = "", y_min = NULL, y_max = NULL, ECOFF = NULL, ECOFF_scale = "MIC", covariate = NULL, covariate_title = "Legend", expand.grid.axis.lines = FALSE){
 
   if(is.null(y_max)){
     y_max = max(data$high_con)
@@ -44,9 +45,9 @@ preview_data = function(data, title = "", y_min = NULL, y_max = NULL, ECOFF = NU
   if(is.null(covariate)){
     plot = data %>%
       ggplot() +
-      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound), color = "black", data = (. %>% filter(left_bound != -Inf & right_bound != Inf)), alpha = 0.2) +
-      geom_segment(aes(x = t, xend = t, y = right_bound, yend = left_bound), color = "black", data = (. %>% filter(left_bound == -Inf) %>% mutate(left_bound = y_min - 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
-      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound), color = "black", data = (. %>% filter(right_bound == Inf) %>% mutate(right_bound = y_max + 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
+      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound), linewidth = 0.75, color = "black", data = (. %>% filter(left_bound != -Inf & right_bound != Inf)), alpha = 0.2) +
+      geom_segment(aes(x = t, xend = t, y = right_bound, yend = left_bound), linewidth = 0.75, color = "black", data = (. %>% filter(left_bound == -Inf) %>% mutate(left_bound = y_min - 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
+      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound), linewidth = 0.75, color = "black", data = (. %>% filter(right_bound == Inf) %>% mutate(right_bound = y_max + 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
       geom_point(aes(x = t, y = left_bound), color = "black", data = . %>% filter(left_bound != -Inf), alpha = 0.2) +
       geom_point(aes(x = t, y = right_bound), color = "black", data = . %>% filter(right_bound != Inf), alpha = 0.2) +
       ggtitle(title) + ylab(TeX(r'(MIC ($\mu$g/mL))')) + xlab("Time")
@@ -60,9 +61,9 @@ preview_data = function(data, title = "", y_min = NULL, y_max = NULL, ECOFF = NU
 
     plot = data %>%
       ggplot() +
-      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound, color = group), data = (. %>% filter(left_bound != -Inf & right_bound != Inf)), alpha = 0.2) +
-      geom_segment(aes(x = t, xend = t, y = right_bound, yend = left_bound, color = group), data = (. %>% filter(left_bound == -Inf) %>% mutate(left_bound = low_con - 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
-      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound, color = group), data = (. %>% filter(right_bound == Inf) %>% mutate(right_bound = high_con + 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
+      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound, color = group), linewidth = 0.75, data = (. %>% filter(left_bound != -Inf & right_bound != Inf)), alpha = 0.2) +
+      geom_segment(aes(x = t, xend = t, y = right_bound, yend = left_bound, color = group), linewidth = 0.75, data = (. %>% filter(left_bound == -Inf) %>% mutate(left_bound = low_con - 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
+      geom_segment(aes(x = t, xend = t, y = left_bound, yend = right_bound, color = group), linewidth = 0.75, data = (. %>% filter(right_bound == Inf) %>% mutate(right_bound = high_con + 2)), arrow = arrow(length = unit(0.03, "npc")), alpha = 0.2) +
       geom_point(aes(x = t, y = left_bound, color = group), data = . %>% filter(left_bound != -Inf), alpha = 0.2) +
       geom_point(aes(x = t, y = right_bound, color = group), data = . %>% filter(right_bound != Inf), alpha = 0.2) +
       ggtitle(title)  + xlab("Time") +
@@ -75,7 +76,7 @@ preview_data = function(data, title = "", y_min = NULL, y_max = NULL, ECOFF = NU
 
     plot = plot +
       ggnewscale::new_scale_color() +
-      geom_hline(aes(yintercept = ECOFF, color = "ECOFF")) +
+      geom_hline(aes(yintercept = ECOFF, color = "ECOFF"), linewidth = 0.75) +
       scale_color_manual(values = c("ECOFF" = "darkorange"), name = NULL) +
       ylim(y_min - 2, y_max + 2) %>% suppressWarnings()
 
@@ -95,8 +96,24 @@ preview_data = function(data, title = "", y_min = NULL, y_max = NULL, ECOFF = NU
                           name = TeX(r'(MIC (Logarithmic Spacing) [$\mu$g/mL])'),
                           breaks = function(limits) seq(floor(limits[1]), ceiling(limits[2]), by = 1)
                         )) +
-    theme_light() +
-    theme(legend.position = "bottom")
+    theme_light()
+
+  if(expand.grid.axis.lines){
+   plot = plot +
+      theme(
+        panel.border = element_rect(linewidth = 0.75),
+        panel.grid.major = element_line(linewidth = 0.75),
+        panel.grid.minor = element_line(linewidth = 0.75),
+        axis.ticks = element_line(linewidth = 0.75),
+        axis.line = element_blank(),
+        legend.position = "bottom"
+      )
+  }else{
+    plot = plot +
+      theme(legend.position = "bottom")
+  }
+
+
 
   plot %>% return()
 }

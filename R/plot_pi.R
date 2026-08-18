@@ -35,8 +35,8 @@ plot_pi = function(output, df, start_date, add_log_reg, ecoff, s_breakpoint, r_b
   pi = df %>%
     offset_time_as_date_in_df(., start_date) %>%
     ggplot(aes(x = t)) +
-    geom_line(aes(x = offset_time_as_date(t, start_date), y = pi1, color = "Component 1 Proportion", linetype = "Component 1 Proportion"), data = pi_bounds) +
-    geom_line(aes(x = offset_time_as_date(t, start_date), y = pi2, color = "Component 2 Proportion", linetype = "Component 2 Proportion"), data = pi_bounds) +
+    geom_line(aes(x = offset_time_as_date(t, start_date), y = pi1, color = "Component 1 Proportion", linetype = "Component 1 Proportion"), linewidth = 0.75, data = pi_bounds) +
+    geom_line(aes(x = offset_time_as_date(t, start_date), y = pi2, color = "Component 2 Proportion", linetype = "Component 2 Proportion"), linewidth = 0.75, data = pi_bounds) +
     #geom_function(fun = function(t){(1 - predict(output$pi_model, newdata = data.frame(t = as_offset_time(x = t, start_date)), type = "response"))}, aes(color = "Component 1 Proportion", linetype = "Fitted Model")) +
     #geom_function(fun = function(t){predict(output$pi_model, newdata = data.frame(t = as_offset_time(x = t, start_date)), type = "response")}, aes(color = "Component 2 Proportion", linetype = "Fitted Model")) +
     #scale_color_manual(breaks = c("Component 1 Proportion", "Component 2 Proportion"), values = c("#e4190b", "#00BFC4"), name = "Component Prevalence") +
@@ -82,8 +82,8 @@ plot_pi = function(output, df, start_date, add_log_reg, ecoff, s_breakpoint, r_b
                resistant = predict(lr_output_bkpt, newdata = tibble(t = t), type = "response") )
 
       pi = pi +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = susceptible, color = "Susceptible", linetype = "Susceptible"), data = pi_bounds) +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = resistant, color = "Resistant", linetype = "Resistant"), data = pi_bounds)
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = susceptible, color = "Susceptible", linetype = "Susceptible"), linewidth = 0.75, data = pi_bounds) +
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = resistant, color = "Resistant", linetype = "Resistant"), linewidth = 0.75, data = pi_bounds)
 
       breaks_list = breaks_list %>% append(c("Susceptible", "Resistant"))
       color_values_list = color_values_list %>% append(c("#7CAE00", "#C77CFF"))
@@ -97,8 +97,8 @@ plot_pi = function(output, df, start_date, add_log_reg, ecoff, s_breakpoint, r_b
                nwt = predict(lr_output_ecoff, newdata = tibble(t = t), type = "response") )
 
       pi = pi +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = wt, color = "WT (ECOFF)", linetype = "WT (ECOFF)"), data = pi_bounds) +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = nwt, color = "NWT (ECOFF)", linetype = "NWT (ECOFF)"), data = pi_bounds)
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = wt, color = "WT (ECOFF)", linetype = "WT (ECOFF)"), linewidth = 0.75, data = pi_bounds) +
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = nwt, color = "NWT (ECOFF)", linetype = "NWT (ECOFF)"), linewidth = 0.75, data = pi_bounds)
 
       breaks_list = breaks_list %>% append(c("WT (ECOFF)", "NWT (ECOFF)"))
       color_values_list = color_values_list %>% append(c("darkred", "#0211a3"))
@@ -112,8 +112,8 @@ plot_pi = function(output, df, start_date, add_log_reg, ecoff, s_breakpoint, r_b
                c2vs = predict(lr_output_visual_split, newdata = tibble(t = t), type = "response") )
 
       pi = pi +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = c1vs, color = "Below Visual Split", linetype = "Below Visual Split"), data = pi_bounds) +
-        geom_line(aes(x = offset_time_as_date(t, start_date), y = c2vs, color = "Above Visual Split", linetype = "Above Visual Split"), data = pi_bounds)
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = c1vs, color = "Below Visual Split", linetype = "Below Visual Split"), linewidth = 0.75, data = pi_bounds) +
+        geom_line(aes(x = offset_time_as_date(t, start_date), y = c2vs, color = "Above Visual Split", linetype = "Above Visual Split"), linewidth = 0.75, data = pi_bounds)
 
       breaks_list = breaks_list %>% append(c("Below Visual Split", "Above Visual Split"))
       color_values_list = color_values_list %>% append(c("#DF4601", "#000000"))
